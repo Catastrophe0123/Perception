@@ -133,10 +133,9 @@ def get_session_token(user_id):
 def get_topics_data(data, offset, limit):
     data = list(data)
     l = len(data)
-    to_send = {"code": 1, "message": "topics fetched successfully",
-               "data": {"total": l, "current_page": get_page_number(offset, limit, l),
-                        "last_page": get_last_page(limit, l), "per_page": limit, "from": offset,
-                        "to": get_page_till(offset, limit, l), "topics": get_topics_from(data, offset, limit)}}
+    to_send = {
+        "data": {"total": l, "from": offset,
+                 "topics": get_topics_from(data, offset, limit)}}
     return to_send
 
 

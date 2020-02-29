@@ -14,28 +14,41 @@ export class Perception extends Component {
     componentDidMount = async () => {
         // fetch topics
         let response = await axios.get('/topics', { params: { offset: 0 } });
+        console.log(response);
         response.data.data.topics = response.data.data.topics.map(el => {
             return el.topic_name;
         });
-        this.setState(
-            {
-                ...this.state,
-                data: {
-                    ...response.data.data
-                }
-            },
-            () => {
-                console.log(this.state.data.topics);
-            }
-        );
+
+        let x = [];
+        for (let item in response.data.data.topics) {
+            let y = response.data.data.topics[item];
+            x.push(y);
+        }
+        console.log(x);
+
+        this.setState({
+            ...this.state,
+            topics: [...x]
+        });
     };
 
     render() {
+        // let x = [];
+        // for (let item in this.state.data.topics) {
+        //     let y = this.state.data.topics[item];
+        //     x.push(y);
+        // }
+        // let value =
+        let y;
+        for (let x in this.state.topic) {
+            y = this.state.topic[x];
+        }
+        console.log(y);
+
         return (
             <div>
                 <h1>PERCEPTION APP</h1>
-
-                <div> {this.state.data.topics} </div>
+                <h1>{y}</h1>
                 <label htmlFor='entry'></label>
                 <input type='text' name='entry' />
             </div>
