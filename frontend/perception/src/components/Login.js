@@ -19,7 +19,12 @@ export class Login extends Component {
             const response = await axios.post('/login', bodyFormData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            console.log(response);
+            console.log(response.data.data);
+            window.localStorage.setItem(
+                'data',
+                JSON.stringify(response.data.data)
+            );
+            this.props.history.push('/perception');
         } catch (err) {
             console.error(err);
         }
@@ -35,10 +40,7 @@ export class Login extends Component {
     render() {
         return (
             <div>
-                <form
-                    onSubmit={this.onSubmitHandler}
-                    action='http://127.0.0.1:4000/login'
-                    method='POST'>
+                <form onSubmit={this.onSubmitHandler}>
                     <div>
                         <label htmlFor='name'>Enter Name : </label>
                         <input
