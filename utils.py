@@ -22,7 +22,8 @@ def update_user_token(data):
     update token for already registered users
     """
     token = secrets.token_urlsafe(20)
-    query = "UPDATE users SET api_token='%s' where email='%s'" % (token, data["email"])
+    query = "UPDATE users SET api_token='%s' where email='%s'" % (
+        token, data["email"])
     conn = create_connection()
     run_query(conn, query, [])
     conn.close()
@@ -33,7 +34,8 @@ def update_user_image(data):
     update the user image
     :param data: data recieved from the client side
     """
-    query = "UPDATE users SET image_url='%s' where email='%s'" % (data["image"], data["email"])
+    query = "UPDATE users SET image_url='%s' where email='%s'" % (
+        data["image"], data["email"])
     conn = create_connection()
     run_query(conn, query, [])
     conn.close()
@@ -77,7 +79,9 @@ def get_page_number(offset, limit, l):
 
 
 def get_last_page(limit, l):
-    if l % limit == 0:
+    print("quwehoqwhe")
+    print(limit)
+    if l % int(limit) == 0:
         return l // limit
     else:
         return l // limit + 1
@@ -91,7 +95,8 @@ def get_page_till(offset, limit, l):
 
 
 def get_images(topic):
-    sql = "select * from content where content_type='image' and topic='" + topic.lower() + "';"
+    sql = "select * from content where content_type='image' and topic='" + topic.lower() + \
+        "';"
     conn = create_connection()
     results = run_query(conn=conn, query=sql)
     return results

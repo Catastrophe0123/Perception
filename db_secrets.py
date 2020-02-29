@@ -1,4 +1,4 @@
 DB_NAME = "perception"
 USER_NAME = "root"
-PASSWORD = ""
+PASSWORD = "password"
 HOST = "localhost"

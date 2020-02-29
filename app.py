@@ -16,6 +16,7 @@ def login():
     handles login
     :return: json object of login data
     """
+
     name, email, image = request.form["name"], request.form["email"], request.form["image"]
     data = {"name": name, "email": email, "image": image}
     query = "select * from users where email='{}'".format(email)
@@ -85,7 +86,7 @@ def submit():
     conn = create_connection()
     data = request.form
     user_id, session_id, words_input, content_id, click_type = data["user_id"], data["session_id"], data["words_input"], \
-                                                               data["content_id"], data["click_type"]
+        data["content_id"], data["click_type"]
     email = get_email(user_id)
     words = ast.literal_eval(str(words_input))
     for word in words:
@@ -108,7 +109,8 @@ def result():
     """
     data = request.args
     user_id, session_id, content_id = data["user_id"], data["session_id"], data["content_id"]
-    query = "SELECT words from user_content WHERE content_id = {}".format(content_id)
+    query = "SELECT words from user_content WHERE content_id = {}".format(
+        content_id)
     conn = create_connection()
     words = run_query(conn, query)
     query = "SELECT * from content WHERE content_id = {}".format(content_id)
@@ -130,7 +132,8 @@ def summary():
     data = request.args
     user_id, session_id = data["user_id"], data["session_id"]
     query = "SELECT user_content.content_id, words, content_url, content_type FROM user_content " \
-            "INNER JOIN content ON content.content_id = user_content.content_id WHERE user_content.session_id = '" + session_id + "' GROUP BY content_id"
+            "INNER JOIN content ON content.content_id = user_content.content_id WHERE user_content.session_id = '" + \
+        session_id + "' GROUP BY content_id"
     conn = create_connection()
     data = run_query(conn, query)
     conn.commit()
@@ -141,4 +144,4 @@ def summary():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=4000, debug=True)
+    app.run(port=4000, debug=True)
