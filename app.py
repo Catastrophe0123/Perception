@@ -60,8 +60,12 @@ def topics():
     query = "select * from topics"
     conn = create_connection()
     results = run_query(conn, query)
+    newresult = []
+    for i in results:
+        newresult.append(i["topic_name"])
+    print(newresult)
     conn.close()
-    return jsonify(get_topics_data(results, offset, limit))
+    return jsonify(get_topics_data(newresult, offset, limit))
 
 
 @app.route("/images", methods=['GET'])
