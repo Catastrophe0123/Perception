@@ -9,10 +9,19 @@ export class Perception extends Component {
     // do this till the end
 
     componentDidMount = async () => {
+        if (window.localStorage.data == null) {
+            this.props.history.push('/login');
+            return null;
+        }
         this.props.onMountingPerception();
     };
 
     render() {
+        if (window.localStorage.data == null) {
+            this.props.history.push('/login');
+            return null;
+        }
+
         return (
             <div>
                 <h1>PERCEPTION APP</h1>

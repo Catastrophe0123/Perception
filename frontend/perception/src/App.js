@@ -6,7 +6,33 @@ import Result from './components/Result';
 import axios from './axiosconfig';
 
 export class App extends Component {
-    state = { topics: [], completed: 0, entry: '', savedEntries: [] };
+    state = {
+        topics: [],
+        completed: 0,
+        entry: '',
+        savedEntries: [],
+        datetime: []
+    };
+
+    submitData = async () => {
+        // do ajax request to the backend
+
+        //get the user data stored in the local storage
+        let dataToSend = JSON.parse(window.localStorage.getItem('data'));
+
+        let response = await axios.post(
+            '/submit',
+            {
+                datetime: [...this.state.datetime],
+                words_input: [...this.state.savedEntries],
+                user_id: dataToSend.user_id,
+                email: dataToSend.email,
+                topic: [...this.state.topics]
+            },
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        console.log(response);
+    };
 
     onChangeHandler = event => {
         this.setState({
@@ -36,29 +62,44 @@ export class App extends Component {
     };
 
     changeTopicHandler = async history => {
-        this.setState({
-            ...this.state,
-            savedEntries: [...this.state.savedEntries, this.state.entry],
-            entry: ''
-        });
-
-        if (this.state.completed === this.state.topics.length - 2) {
-            let response = await axios.get('/topics', {
-                params: { offset: this.state.completed + 2 }
-            });
-            console.log(response);
+        if (this.state.entry === '') {
             this.setState(st => {
-                return {
-                    ...st,
-                    topics: [...st.topics, ...response.data.data.topics]
-                };
+                return { ...st, completed: st.completed + 1 };
             });
+        } else {
+            let date = new Date();
+            let date1 =
+                date.toISOString().split('T')[0] +
+                ' ' +
+                date.toTimeString().split(' ')[0];
+            this.setState({
+                ...this.state,
+                savedEntries: [...this.state.savedEntries, this.state.entry],
+                datetime: [...this.state.datetime, date1],
+                entry: ''
+            });
+
+            if (this.state.completed === this.state.topics.length - 2) {
+                let response = await axios.get('/topics', {
+                    params: { offset: this.state.completed + 2 }
+                });
+                console.log(response);
+                this.setState(st => {
+                    return {
+                        ...st,
+                        topics: [...st.topics, ...response.data.data.topics]
+                    };
+                });
+            }
         }
 
         if (this.state.completed === this.state.topics.length - 1) {
             // there are no more topics to show
             // redirect to results page
             // this.props.history.push('/result');
+
+            //submit before pushing
+            this.submitData();
             history.push('/result');
         }
 
@@ -71,22 +112,22 @@ export class App extends Component {
         // end handler
 
         let entries = [...this.state.savedEntries];
-        for (
-            let i = this.state.completed + 1;
-            i < this.state.topics.length;
-            i++
-        ) {
+        let dates = [...this.state.datetime];
+        for (let i = this.state.completed; i < this.state.topics.length; i++) {
             entries.push('');
+            dates.push('');
         }
 
         this.setState({
             ...this.state,
             savedEntries: entries,
+            datetime: dates,
             completed: entries.length + 1
         });
 
         // move to the results page
         // this.props.history.push('/result');
+        this.submitData();
         history.push('/result');
     };
 
@@ -94,7 +135,6 @@ export class App extends Component {
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route exact path='/' component={Login} />
                     <Route
                         exact
                         path='/perception'
@@ -109,7 +149,12 @@ export class App extends Component {
                             />
                         )}
                     />
-                    <Route exact path='/result' component={Result} />
+                    <Route
+                        exact
+                        path='/result'
+                        render={props => <Result {...props} {...this.state} />}
+                    />
+                    <Route path='/' component={Login} />
                 </Switch>
             </BrowserRouter>
         );

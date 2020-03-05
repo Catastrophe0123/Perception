@@ -57,7 +57,7 @@ def create_db():
                                   user_id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                   name text NOT NULL,
                                   email text NOT NULL,
-                                  image_url text NOT NULL,
+                                  image_url text,
                                   api_token text
                                 ); """
 
@@ -65,18 +65,17 @@ def create_db():
                                 CREATE TABLE IF NOT EXISTS user_content (
                                 words_id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                 words text,
+                                user_id INTEGER,
+                                topic text,
                                 time datetime,
-                                session_id text,
-                                content_id text,
                                 email text
                                 );
     """
     create_tables(conn=connection, create_table_sql=sql_create_content_table)
     create_tables(conn=connection, create_table_sql=sql_create_topics_table)
     create_tables(conn=connection, create_table_sql=sql_create_users_table)
-    create_tables(conn=connection, create_table_sql=sql_create_user_content_table)
-
-
+    create_tables(conn=connection,
+                  create_table_sql=sql_create_user_content_table)
 
 
 if __name__ == '__main__':

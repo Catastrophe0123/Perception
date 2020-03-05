@@ -145,6 +145,7 @@ def calc_percent(word_freq):
     :param word_freq: counter object
     :return: dict with words and their percentage
     """
+    print(word_freq)
     total = 0
     freq_percent = {}
     for word, count in word_freq:
@@ -160,11 +161,12 @@ def get_word_percent(words):
     :param words: words_input from the user_content table
     :return: dict with words input frequency percentage
     """
-    user_words = []
+    userwords = []
     stop_words = ("END_TIME", "START_TIME")
+    print(words)
     for word in words:
         stipped_word = word["words"].replace(" ", "")
-        if word["words"] not in stop_words and len(stipped_word) > 1:
-            user_words.extend(word["words"].split(","))
-    word_freq = Counter(user_words).items()
+        if word["words"] not in stop_words and len(stipped_word) >= 1:
+            userwords.extend(word["words"].split(","))
+    word_freq = Counter(userwords).items()
     return calc_percent(word_freq)

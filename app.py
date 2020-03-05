@@ -89,19 +89,19 @@ def submit():
     handles user submits
     :return: json object of submit confirmation
     """
+
     conn = create_connection()
-    data = request.form
-    user_id, session_id, words_input, content_id, click_type = data["user_id"], data["session_id"], data["words_input"], \
-        data["content_id"], data["click_type"]
+    data = request.json
+    user_id, words_input, datetime, topic = data["user_id"], data[
+        "words_input"], data["datetime"], data["topic"]
     email = get_email(user_id)
-    words = ast.literal_eval(str(words_input))
-    for word in words:
-        query = "INSERT into user_content(words,time,session_id,content_id,email) VALUES(%s,%s,%s,%s,%s)"
-        run_query(conn, query, [word[0],
-                                get_datetime(word[1]),
-                                session_id,
-                                content_id,
-                                email])
+    # words = ast.literal_eval(str(words_input))
+    for i, word in enumerate(words_input):
+        print("topic is : ", topic[i])
+        query = "INSERT into user_content(words, user_id, time,email, topic) VALUES(%s,%s,%s,%s,%s)"
+        run_query(conn, query, [word, user_id,
+                                datetime[i],
+                                email, topic[i]])
     conn.commit()
     conn.close()
     return jsonify({"code": 1, "message": "user response saved"})
@@ -114,19 +114,28 @@ def result():
     :return: json object with results
     """
     data = request.args
-    user_id, session_id, content_id = data["user_id"], data["session_id"], data["content_id"]
-    query = "SELECT words from user_content WHERE content_id = {}".format(
-        content_id)
+    user_id = data["user_id"]
+    query = "SELECT words, topic from user_content WHERE user_id = {}".format(
+        user_id)
     conn = create_connection()
-    words = run_query(conn, query)
-    query = "SELECT * from content WHERE content_id = {}".format(content_id)
-    content = run_query(conn, query)[0]
-    word_freq = get_word_percent(words)
+    (queryResults) = run_query(conn, query)
+    print(queryResults)
+
+    # query = "SELECT * from content WHERE content_id = {}".format(content_id)
+    # content = run_query(conn, query)[0]
+    words = []
+    topics = []
+    for i in queryResults:
+        words.append(i["words"])
+        topics.append(i["topic"])
+
+    word_freq = get_word_percent(queryResults)
+    freq = []
     conn.commit()
     conn.close()
     return jsonify(
-        {"code": 1, "message": "Stats fetched successfully", "content_id": content_id, "words_stats": word_freq,
-         "content_type": content["content_type"], "content_image_url": content["content_url"]})
+        {"code": 1, "message": "Stats fetched successfully", "words_stats": word_freq, "alldata": queryResults,
+         "content_type": "application/json"})
 
 
 @app.route("/summary", methods=['GET'])
