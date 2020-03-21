@@ -15,9 +15,6 @@ export class App extends Component {
     };
 
     submitData = async () => {
-        // do ajax request to the backend
-
-        //get the user data stored in the local storage
         let dataToSend = JSON.parse(window.localStorage.getItem('data'));
 
         let response = await axios.post(
@@ -44,16 +41,6 @@ export class App extends Component {
     onMountingPerception = async () => {
         let response = await axios.get('/topics', { params: { offset: 0 } });
         console.log(response);
-        // response.data.data.topics = response.data.data.topics.map(el => {
-        //     return el.topic_name;
-        // });
-
-        // let x = [];
-        // for (let item in response.data.data.topics) {
-        //     let y = response.data.data.topics[item];
-        //     x.push(y);
-        // }
-        // console.log(x);
 
         this.setState({
             ...this.state,
@@ -94,11 +81,6 @@ export class App extends Component {
         }
 
         if (this.state.completed === this.state.topics.length - 1) {
-            // there are no more topics to show
-            // redirect to results page
-            // this.props.history.push('/result');
-
-            //submit before pushing
             this.submitData();
             history.push('/result');
         }
@@ -109,8 +91,6 @@ export class App extends Component {
     };
 
     onEndHandler = history => {
-        // end handler
-
         let entries = [...this.state.savedEntries];
         let dates = [...this.state.datetime];
         for (let i = this.state.completed; i < this.state.topics.length; i++) {
@@ -126,7 +106,6 @@ export class App extends Component {
         });
 
         // move to the results page
-        // this.props.history.push('/result');
         this.submitData();
         history.push('/result');
     };

@@ -10,7 +10,6 @@ export class Result extends Component {
             return null;
         }
         console.log('hello world');
-        // async /results - store in state - display in with another component or something
         let data = JSON.parse(window.localStorage.getItem('data'));
         let user_id = data.user_id;
         console.log(data);
@@ -23,11 +22,6 @@ export class Result extends Component {
     };
 
     render() {
-        // if (window.localStorage.data == null) {
-        //     this.props.history.push('/login');
-        //     return null;
-        // }
-
         return (
             <div>
                 YOUR RESULTS

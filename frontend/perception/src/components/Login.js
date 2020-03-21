@@ -9,7 +9,6 @@ export class Login extends Component {
     onSubmitHandler = async event => {
         event.preventDefault();
         console.log('submitting');
-        // have to do a post request to the url
 
         let bodyFormData = new FormData();
         bodyFormData.set('name', this.state.name);

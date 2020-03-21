@@ -95,7 +95,6 @@ def submit():
     user_id, words_input, datetime, topic = data["user_id"], data[
         "words_input"], data["datetime"], data["topic"]
     email = get_email(user_id)
-    # words = ast.literal_eval(str(words_input))
     for i, word in enumerate(words_input):
         print("topic is : ", topic[i])
         query = "INSERT into user_content(words, user_id, time,email, topic) VALUES(%s,%s,%s,%s,%s)"
@@ -121,8 +120,6 @@ def result():
     (queryResults) = run_query(conn, query)
     print(queryResults)
 
-    # query = "SELECT * from content WHERE content_id = {}".format(content_id)
-    # content = run_query(conn, query)[0]
     words = []
     topics = []
     for i in queryResults:

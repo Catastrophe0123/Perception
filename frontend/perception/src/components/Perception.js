@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 import ReactCountdownClock from 'react-countdown-clock';
 
 export class Perception extends Component {
-    // gets the topics using ajax and store in local storage
-    // display the topic 1 at a time show the timer
-    // get user entered values and store it
-    // get more topics if local storage runs out
-    // do this till the end
-
     componentDidMount = async () => {
         if (window.localStorage.data == null) {
             this.props.history.push('/login');
